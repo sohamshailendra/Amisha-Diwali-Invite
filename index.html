@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Kandil Night Invite</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one deep-rani scroll. Akash kandils float up behind everything; each section drifts in alongside its own lantern. */
+:root{
+  --bg:#3a0a26; --bg-2:#5a1240; --rani:#ff3d8d; --rani-2:#ff7ab3; --rani-deep:#8f1a55;
+  --mint:#9ff0cf; --mint-2:#d6fff0; --mint-dim:#4fb08f;
+  --ink:#fff4f9; --muted:rgba(255,244,249,.68); --line:rgba(159,240,207,.3);
+  --display:'Rozha One','Georgia',serif; --body:'Mukta',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;line-height:1.1}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+.eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mint);font-weight:600}
+
+/* ---------- SKY (floating lanterns) ---------- */
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:0;transition:opacity 1.5s ease}
+#sky.on{opacity:1}
+#sky .fl{position:absolute;bottom:-18vh;width:var(--w);left:var(--l);opacity:0;animation:float var(--d) linear infinite;animation-delay:var(--dl)}
+@keyframes float{0%{transform:translateY(0) translateX(0);opacity:0}8%{opacity:var(--o)}50%{transform:translateY(-60vh) translateX(var(--sw))}92%{opacity:var(--o)}100%{transform:translateY(-125vh) translateX(0);opacity:0}}
+
+/* ---------- LANTERN (styled via inherited custom properties, which reach inside <use>) ---------- */
+@property --kglow{syntax:'<number>';inherits:true;initial-value:0}
+@property --kcore{syntax:'<number>';inherits:true;initial-value:0}
+.kandil{width:120px;height:160px;display:block;overflow:visible;--kglow:0;--kcore:0;--kbody:url(#bodyDark);--ktail:#4fb08f;transition:--kglow 1s ease,--kcore .6s ease}
+.kandil.lit{--kglow:1;--kcore:1;--kbody:url(#bodyLit);--ktail:#9ff0cf;animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{0%,100%{--kglow:.8;--kcore:1}50%{--kglow:1;--kcore:.8}}
+
+/* ---------- COVER ---------- */
+#cover{min-height:100vh;min-height:100svh;touch-action:manipulation;-webkit-user-select:none;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.2rem;padding-block:2rem;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));position:relative;z-index:2;cursor:pointer;background:radial-gradient(ellipse at 50% 70%,var(--bg-2) 0%,var(--bg) 62%);width:100%;transition:opacity .9s ease}
+#cover.open{opacity:0;pointer-events:none;position:absolute;inset:0}
+#cover .kandil{transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+#cover.lifting .kandil{transform:translateY(-70vh) scale(.6)}
+#cover h1{font-size:clamp(2rem,8.5vw,3.4rem);color:var(--ink);max-width:12ch}
+#cover h1 span{color:var(--rani-2)}
+#cover .tap{font-size:.95rem;color:var(--mint);letter-spacing:.14em;text-transform:uppercase;font-weight:600;animation:pulse 2.2s ease-in-out infinite}
+#cover .hint{font-size:.85rem;color:var(--muted)}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ---------- PAGE ---------- */
+#page{position:relative;z-index:1;opacity:0;transition:opacity 1s ease .3s}
+#page.in{opacity:1}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:1.5rem 4rem;display:flex;flex-direction:column;gap:4.4rem}
+section{display:grid;grid-template-columns:48px 1fr;gap:.9rem;align-items:start}
+section .rail{display:flex;justify-content:center}
+section .rail .kandil{width:48px;height:64px;opacity:0;transform:translateY(60px);transition:transform 1.1s cubic-bezier(.2,.7,.2,1),opacity .8s ease}
+section.seen .rail .kandil{opacity:1;transform:none}
+section .content{min-width:0;display:flex;flex-direction:column;gap:1rem;transform:translateY(24px);opacity:.92;transition:transform 1s cubic-bezier(.2,.7,.2,1) .15s,opacity .8s ease .15s}
+section.seen .content{transform:none;opacity:1}
+h2{font-size:clamp(1.8rem,7.5vw,2.6rem);color:var(--mint-2)}
+.lead{font-size:1.1rem;color:var(--ink)}
+.lead em{font-style:normal;color:var(--rani-2);font-weight:600}
+
+/* Plan */
+.plan{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.plan div{display:grid;grid-template-columns:5.2rem 1fr;gap:.8rem;padding:.85rem 0;border-bottom:1px solid var(--line)}
+.plan dt{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mint);font-weight:600;padding-top:.25rem}
+.plan dd{margin:0;font-size:1.05rem;min-width:0}
+.plan dd small{display:block;color:var(--muted);font-size:.85rem;margin-top:.1rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;padding:.7rem 1.3rem;border-radius:999px;border:1.5px solid var(--mint);background:transparent;color:var(--mint-2);text-decoration:none;font-weight:600;font-size:.95rem;transition:background .2s,transform .15s}
+.btn:hover{background:rgba(159,240,207,.1)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,button:focus-visible,input:focus-visible,[role=button]:focus-visible{outline:2px solid var(--mint-2);outline-offset:3px}
+
+/* Countdown */
+.count{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.count div{background:linear-gradient(180deg,var(--rani),var(--rani-deep));border-radius:16px;padding:.9rem .3rem;text-align:center;box-shadow:0 10px 30px rgba(255,61,141,.25)}
+.count b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(1.7rem,8vw,2.5rem);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
+.count span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mint-2);font-weight:600}
+#live{display:none;font-family:var(--display);font-size:1.6rem;color:var(--mint-2)}
+
+/* Rulebook */
+.rule{border:1.5px solid var(--rani);border-radius:20px;padding:1.4rem 1.3rem;background:rgba(255,61,141,.12);position:relative}
+.rule::before{content:"Rule 1 of 1";position:absolute;top:-.75rem;left:1rem;background:var(--bg);padding:0 .5rem;color:var(--rani-2);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.rule h3{font-size:1.6rem;color:var(--ink)}
+.rule p{color:var(--muted);margin-top:.5rem;font-size:.95rem}
+
+/* RSVP */
+fieldset{border:0;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;gap:.6rem;border-radius:14px;transition:box-shadow .3s}
+fieldset.missing{box-shadow:0 0 0 2px var(--rani-2),0 0 26px rgba(255,122,179,.4);animation:shake .4s ease}
+fieldset.missing legend{color:var(--rani-2)}
+fieldset.missing legend::after{content:" — ye bhar do";font-family:var(--body);font-size:.8rem;color:var(--rani-2);font-weight:600}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+legend{font-family:var(--display);font-size:1.2rem;color:var(--ink);padding:0;margin-bottom:.3rem}
+.req{color:var(--mint);font-family:var(--body);font-size:.72rem;vertical-align:top;letter-spacing:.08em}
+input[type=text]{width:100%;min-height:50px;padding:.7rem 1rem;border-radius:12px;border:1.5px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);font:inherit;font-size:1.05rem}
+input[type=text]::placeholder{color:rgba(255,244,249,.4)}
+.chips{display:flex;flex-wrap:wrap;gap:.55rem}
+.chip{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:.5rem 1rem;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);font-size:.95rem;font-weight:500;transition:background .2s,border-color .2s,transform .15s}
+.chip:active{transform:scale(.96)}
+.chip[aria-pressed=true]{background:var(--mint);border-color:var(--mint);color:#2a0a1c;font-weight:700}
+.react{min-height:1.4em;font-size:.92rem;color:var(--rani-2);font-style:italic;transition:opacity .3s}
+.react:empty{opacity:0}
+.form{display:flex;flex-direction:column;gap:1.8rem;padding:.5rem}
+.actions{display:flex;flex-direction:column;gap:.8rem;align-items:center;padding-top:.4rem}
+.btn.primary{background:linear-gradient(180deg,var(--rani-2),var(--rani));color:#fff;border-color:transparent;font-weight:700;width:100%;font-size:1.1rem;min-height:54px;box-shadow:0 10px 30px rgba(255,61,141,.35)}
+.btn.primary.inactive{opacity:.5;box-shadow:none}
+.btn.primary.inactive:hover{background:linear-gradient(180deg,var(--rani-2),var(--rani))}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;font-size:.92rem;padding:.4rem}
+.link:hover{color:var(--mint-2)}
+.note{font-size:.88rem;color:var(--muted);text-align:center}
+
+/* Pass card */
+#passwrap{display:none;flex-direction:column;gap:1rem;align-items:center}
+#passwrap.show{display:flex}
+.pass{width:100%;max-width:340px;aspect-ratio:3/4;border-radius:24px;padding:1.4rem;background:
+  radial-gradient(ellipse at 80% 15%,rgba(159,240,207,.35),transparent 45%),
+  linear-gradient(165deg,var(--rani) 0%,var(--rani-deep) 55%,#4a0c2f 100%);
+  border:1.5px solid var(--mint);box-shadow:0 24px 60px rgba(0,0,0,.5),inset 0 0 0 6px var(--bg),inset 0 0 0 7.5px var(--mint-dim);
+  display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;animation:cardin .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes cardin{from{transform:translateY(24px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.pass .top{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+.pass .top .eyebrow{font-size:.62rem;color:var(--mint-2)}
+.pass .kandil{width:34px;height:46px}
+.pass .name{font-family:var(--display);font-size:clamp(1.8rem,9vw,2.5rem);color:var(--ink);line-height:1.05;overflow-wrap:anywhere}
+.pass .role{font-size:1rem;color:var(--mint-2);margin-top:.4rem;font-weight:600}
+.pass .meta{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;border-top:1px dashed var(--line);padding-top:.9rem}
+.pass .meta b{display:block;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mint);font-weight:600}
+.pass .meta span{font-size:.92rem}
+.pass .stamp{position:absolute;right:1rem;top:40%;transform:rotate(-14deg);font-family:var(--display);font-size:1.1rem;color:var(--mint);border:2px solid var(--mint);border-radius:8px;padding:.1rem .5rem;opacity:.9;letter-spacing:.08em}
+
+/* Sparkles */
+.spark{position:fixed;left:0;top:0;width:7px;height:7px;border-radius:50%;background:var(--mint-2);pointer-events:none;z-index:50;animation:spark .7s ease-out forwards;box-shadow:0 0 8px var(--mint)}
+.spark:nth-child(odd){background:var(--rani-2);box-shadow:0 0 8px var(--rani)}
+@keyframes spark{from{transform:translate(var(--x0),var(--y0)) scale(1);opacity:1}to{transform:translate(var(--x1),var(--y1)) scale(.2);opacity:0}}
+
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding-bottom:1rem}
+footer span{color:var(--rani-2)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  #sky{display:none}
+  section .content,section .rail .kandil{transform:none;opacity:1}
+  #cover.lifting .kandil{transform:none}
+}
+</style>
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="kandilShape" viewBox="0 0 100 140">
+      <ellipse cx="50" cy="52" rx="48" ry="52" fill="url(#glowGrad)" style="opacity:var(--kglow,0)"/>
+      <rect x="40" y="8" width="20" height="8" rx="2" fill="#2a0a1c"/>
+      <path d="M50 14 L84 40 L72 92 L28 92 L16 40 Z" style="fill:var(--kbody,#3a0a26)"/>
+      <path d="M50 14 L84 40 L72 92 L28 92 L16 40 Z" fill="none" stroke="#9ff0cf" stroke-width="1.5" opacity=".7"/>
+      <path d="M50 14 L50 92 M16 40 L84 40 M22 66 L78 66" stroke="#2a0a1c" stroke-width="1.2" opacity=".55"/>
+      <circle cx="50" cy="56" r="11" fill="#fff" style="opacity:var(--kcore,0)"/>
+      <g stroke-width="2" stroke-linecap="round" fill="none" style="stroke:var(--ktail,#4fb08f)">
+        <path d="M36 94 L34 128"/><path d="M50 94 L50 134"/><path d="M64 94 L66 128"/>
+      </g>
+    </symbol>
+    <radialGradient id="glowGrad"><stop offset="0" stop-color="#d6fff0" stop-opacity=".55"/><stop offset=".55" stop-color="#9ff0cf" stop-opacity=".16"/><stop offset="1" stop-color="#9ff0cf" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bodyDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b1a48"/><stop offset="1" stop-color="#3a0a26"/></linearGradient>
+    <linearGradient id="bodyLit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9cc5"/><stop offset=".5" stop-color="#ff3d8d"/><stop offset="1" stop-color="#8f1a55"/></linearGradient>
+  </defs>
+</svg>
+
+<div id="sky" aria-hidden="true"></div>
+
+<div id="cover" role="button" tabindex="0" aria-label="Tap to open the invite">
+  <svg class="kandil" id="coverKandil" aria-hidden="true"><use href="#kandilShape"/></svg>
+  <h1>Diwali ka invite, <span>sirf aapke liye</span></h1>
+  <p class="tap">Tap to open</p>
+  <p class="hint">Kandil jalao, invite khulega</p>
+</div>
+
+<main id="page" hidden>
+<div class="wrap">
+
+  <section id="headline">
+    <div class="rail"><svg class="kandil lit" aria-hidden="true"><use href="#kandilShape"/></svg></div>
+    <div class="content">
+      <p class="eyebrow">You're invited</p>
+      <h2>Iss Diwali, Kandil Night manao</h2>
+      <p class="lead">A night of <em>taash, housie</em>, fun people and zero reasons to leave early.</p>
+    </div>
+  </section>
+
+  <section id="plan">
+    <div class="rail"><svg class="kandil lit" aria-hidden="true"><use href="#kandilShape"/></svg></div>
+    <div class="content">
+      <h2>The plan</h2>
+      <dl class="plan">
+        <div><dt>When</dt><dd>6th November, Friday<small>8pm onwards</small></dd></div>
+        <div><dt>Where</dt><dd>A 83, East of Kailash<small>New Delhi</small></dd></div>
+        <div><dt>Bring</dt><dd>BYOB<small>Apni bottle, apna swag.</small></dd></div>
+      </dl>
+      <p><a class="btn" id="gcal" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kandil%20Night%20%E2%80%94%20Diwali%20Party&dates=20261106T143000Z/20261106T193000Z&details=BYOB.%20Traditional%20is%20mandatory.&location=A%2083%2C%20East%20of%20Kailash%2C%20New%20Delhi&ctz=Asia/Kolkata">＋ Add to Google Calendar</a></p>
+    </div>
+  </section>
+
+  <section id="countdown">
+    <div class="rail"><svg class="kandil lit" aria-hidden="true"><use href="#kandilShape"/></svg></div>
+    <div class="content">
+      <h2>Kandil Night starts in</h2>
+      <div class="count" id="count">
+        <div><b id="cd">13</b><span>days</span></div>
+        <div><b id="ch">02</b><span>hrs</span></div>
+        <div><b id="cm">27</b><span>min</span></div>
+        <div><b id="cs">00</b><span>sec</span></div>
+      </div>
+      <p id="live">Party chal rahi hai. Aa jao.</p>
+    </div>
+  </section>
+
+  <section id="rules">
+    <div class="rail"><svg class="kandil lit" aria-hidden="true"><use href="#kandilShape"/></svg></div>
+    <div class="content">
+      <h2>Rulebook</h2>
+      <div class="rule">
+        <h3>Traditional is mandatory.</h3>
+        <p>No entry without it. Kurta, saree, sherwani, lehenga, dhoti: kuch bhi chalega. Jeans nahi chalegi.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="rsvp">
+    <div class="rail"><svg class="kandil lit" aria-hidden="true"><use href="#kandilShape"/></svg></div>
+    <div class="content">
+      <h2>RSVP</h2>
+      <form class="form" id="form" novalidate autocomplete="off">
+        <fieldset id="fsName">
+          <legend>Naam <span class="req">required</span></legend>
+          <input type="text" id="name" name="name" placeholder="Jo card pe chhapega" maxlength="40" autocomplete="name">
+          <p class="react" id="rName"></p>
+        </fieldset>
+
+        <fieldset id="fsComing">
+          <legend>Coming na? <span class="req">required</span></legend>
+          <div class="chips" id="comingChips" role="group" aria-label="Coming?">
+            <button type="button" class="chip" data-v="Pakka" data-r="Yesss. Kandil tumhare naam ka ud gaya." aria-pressed="false">Pakka</button>
+            <button type="button" class="chip" data-v="Shayad" data-r="Shayad = haan with extra steps. Hum wait karenge." aria-pressed="false">Shayad</button>
+            <button type="button" class="chip" data-v="Iss baar not possible" data-r="Theek hai… par mithai ka dabba phir bhi bhejna." aria-pressed="false">Iss baar not possible</button>
+          </div>
+          <p class="react" id="rComing"></p>
+        </fieldset>
+
+        <fieldset id="fsRole">
+          <legend>Pick your party role <span class="req">required</span></legend>
+          <div class="chips" id="roleChips" role="group" aria-label="Party role">
+            <button type="button" class="chip" data-v="DJ Saab" data-r="Ek bhi Honey Singh skip hua toh aux chhin jayega." aria-pressed="false">DJ Saab</button>
+            <button type="button" class="chip" data-v="Decor Paglu" data-r="Fairy lights ka budget: unlimited. Taste: zaroori." aria-pressed="false">Decor Paglu</button>
+            <button type="button" class="chip" data-v="Chakna Champion" data-r="Sirf peanuts laaye toh gate pe hi rok denge." aria-pressed="false">Chakna Champion</button>
+            <button type="button" class="chip" data-v="Bartender" data-r="Pour heavy, judge light." aria-pressed="false">Bartender</button>
+            <button type="button" class="chip" data-v="Game Master" data-r="Teen patti ke rules tumhare, jhagde bhi tumhare." aria-pressed="false">Game Master</button>
+            <button type="button" class="chip" data-v="Paparazzi" data-r="Flash on, filter off. Sab candid chahiye." aria-pressed="false">Paparazzi</button>
+            <button type="button" class="chip" data-v="Chief Guest (just here to vibe)" data-r="Zero kaam, full izzat. Legend behaviour." aria-pressed="false">Chief Guest (just here to vibe)</button>
+          </div>
+          <p class="react" id="rRole"></p>
+        </fieldset>
+
+        <div class="actions">
+          <a class="btn primary inactive" id="send" role="button" target="_blank" rel="noopener">RSVP on WhatsApp</a>
+          <p class="note" id="sendNote">Sab bhar do, phir WhatsApp khulega.</p>
+          <button type="button" class="link" id="resetBtn">Change my answers</button>
+        </div>
+      </form>
+
+      <div id="passwrap" aria-live="polite">
+        <div class="pass" id="pass">
+          <div class="top">
+            <div><p class="eyebrow">Kandil Night · Entry pass</p></div>
+            <svg class="kandil lit" aria-hidden="true"><use href="#kandilShape"/></svg>
+          </div>
+          <div>
+            <p class="name" id="pName">—</p>
+            <p class="role" id="pRole">—</p>
+          </div>
+          <div class="meta">
+            <div><b>Date</b><span>6 Nov, Fri · 8pm</span></div>
+            <div><b>Where</b><span>A 83, East of Kailash</span></div>
+          </div>
+          <div class="stamp" id="pStamp">PAKKA</div>
+        </div>
+        <p class="note">Screenshot your card. It's your entry pass.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Kandil udao, dil khol ke aao. <span>Shubh Deepawali.</span></footer>
+</div>
+</main>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---- sparkles ---- */
+  function burst(x, y, n){
+    if (reduce) return;
+    n = n || 12;
+    for (var i = 0; i < n; i++){
+      var s = document.createElement('span');
+      s.className = 'spark';
+      var a = Math.random() * Math.PI * 2, d = 28 + Math.random() * 46;
+      s.style.setProperty('--x0', x + 'px'); s.style.setProperty('--y0', y + 'px');
+      s.style.setProperty('--x1', (x + Math.cos(a) * d) + 'px'); s.style.setProperty('--y1', (y + Math.sin(a) * d) + 'px');
+      document.body.appendChild(s);
+      s.addEventListener('animationend', function(){ this.remove(); });
+    }
+  }
+  function burstAt(el){ var r = el.getBoundingClientRect(); burst(r.left + r.width/2, r.top + r.height/2); }
+
+  /* ---- sky of floating lanterns (lightweight: 9 SVG uses, CSS-animated) ---- */
+  function makeSky(){
+    if (reduce) return;
+    var sky = $('sky'), n = 9;
+    for (var i = 0; i < n; i++){
+      var w = 22 + Math.random() * 30;
+      var el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      el.setAttribute('class', 'kandil fl'); el.style.setProperty('--kglow','1'); el.style.setProperty('--kcore','1'); el.style.setProperty('--kbody','url(#bodyLit)'); el.style.setProperty('--ktail','#9ff0cf');
+      el.setAttribute('viewBox', '0 0 100 140');
+      el.innerHTML = '<use href="#kandilShape"/>';
+      el.style.setProperty('--w', w + 'px');
+      el.style.setProperty('--l', (Math.random() * 92) + '%');
+      el.style.setProperty('--d', (18 + Math.random() * 16) + 's');
+      el.style.setProperty('--dl', (-Math.random() * 30) + 's');
+      el.style.setProperty('--sw', ((Math.random() - .5) * 60) + 'px');
+      el.style.setProperty('--o', (.25 + Math.random() * .4).toFixed(2));
+      el.style.height = (w * 1.4) + 'px';
+      sky.appendChild(el);
+    }
+    sky.classList.add('on');
+  }
+
+  /* ---- cover ---- */
+  var cover = $('cover'), page = $('page'), opened = false;
+  function openInvite(e){
+    if (opened) return; opened = true;
+    var t = e && e.changedTouches ? e.changedTouches[0] : e;
+    $('coverKandil').classList.add('lit');
+    burst((t && t.clientX) || innerWidth/2, (t && t.clientY) || innerHeight/2, 18);
+    var delay = reduce ? 0 : 900;
+    setTimeout(function(){ cover.classList.add('lifting'); }, reduce ? 0 : 350);
+    setTimeout(function(){
+      page.hidden = false;
+      makeSky();
+      requestAnimationFrame(function(){ page.classList.add('in'); });
+      cover.classList.add('open');
+      setTimeout(function(){ cover.hidden = true; }, reduce ? 0 : 900);
+      observe();
+    }, delay);
+  }
+  cover.addEventListener('click', openInvite);
+  cover.addEventListener('touchend', openInvite, { passive: true });
+  cover.addEventListener('pointerup', openInvite);
+  cover.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') openInvite(e); });
+  document.addEventListener('touchend', function(e){ if (!opened && !page.contains(e.target)) openInvite(e); }, { passive: true });
+  document.addEventListener('click', function(e){ if (!opened && !page.contains(e.target)) openInvite(e); });
+
+  /* ---- sections drift in with their lantern ---- */
+  function observe(){
+    var secs = document.querySelectorAll('section');
+    if (!('IntersectionObserver' in window)){ secs.forEach(function(s){ s.classList.add('seen'); }); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ en.target.classList.add('seen'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+    secs.forEach(function(s){ io.observe(s); });
+  }
+
+  /* ---- countdown ---- */
+  var start = new Date('2026-11-06T20:00:00+05:30').getTime();
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function tick(){
+    var diff = start - Date.now();
+    if (diff <= 0){ $('count').style.display = 'none'; $('live').style.display = 'block'; return; }
+    var s = Math.floor(diff/1000);
+    $('cd').textContent = Math.floor(s/86400);
+    $('ch').textContent = pad(Math.floor(s%86400/3600));
+    $('cm').textContent = pad(Math.floor(s%3600/60));
+    $('cs').textContent = pad(s%60);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ---- RSVP ---- */
+  var state = { name: '', coming: '', role: '' };
+  var WA = '919910813465';
+  var nameEl = $('name'), send = $('send'), note = $('sendNote');
+
+  function chips(groupId, key, reactId){
+    var g = $(groupId);
+    g.addEventListener('click', function(e){
+      var b = e.target.closest('.chip'); if (!b) return;
+      g.querySelectorAll('.chip').forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      state[key] = b.dataset.v;
+      $(reactId).textContent = b.dataset.r;
+      burstAt(b);
+      if (key === 'coming') toggleRole();
+      update();
+    });
+  }
+  chips('comingChips', 'coming', 'rComing');
+  chips('roleChips', 'role', 'rRole');
+
+  function notComing(){ return state.coming === 'Iss baar not possible'; }
+  function toggleRole(){ $('fsRole').hidden = notComing(); }
+
+  nameEl.addEventListener('input', function(){
+    state.name = nameEl.value.trim();
+    $('rName').textContent = state.name.length > 1 ? 'Shabaash, ' + state.name + '.' : '';
+    update();
+  });
+
+  function missing(){
+    var m = [];
+    if (!state.name) m.push('fsName');
+    if (!state.coming) m.push('fsComing');
+    if (!notComing() && !state.role) m.push('fsRole');
+    return m;
+  }
+
+  function update(){
+    document.querySelectorAll('fieldset.missing').forEach(function(f){ f.classList.remove('missing'); });
+    if (missing().length){
+      send.removeAttribute('href');
+      send.classList.add('inactive');
+      note.textContent = 'Sab bhar do, phir WhatsApp khulega.';
+    } else {
+      var lines = ['Hi! RSVP for Kandil Night (6 Nov, 8pm)', 'Name: ' + state.name, 'Coming: ' + state.coming];
+      if (!notComing()) lines.push('Role: ' + state.role);
+      send.setAttribute('href', 'https://wa.me/' + WA + '?text=' + encodeURIComponent(lines.join('\n')));
+      send.classList.remove('inactive');
+      note.textContent = 'Ready. Tap karo, WhatsApp khulega.';
+    }
+  }
+
+  send.addEventListener('click', function(){
+    var m = missing();
+    if (m.length){
+      m.forEach(function(id){ $(id).classList.add('missing'); });
+      $(m[0]).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      note.textContent = 'Highlighted wala bhar do pehle.';
+      return; // no href on the link, so nothing opens
+    }
+    burstAt(send);
+    showPass();
+  });
+
+  function showPass(){
+    $('pName').textContent = state.name;
+    if (notComing()){
+      $('pRole').textContent = 'Iss baar nahi, agli baar pakka.';
+      $('pStamp').textContent = 'MISS YOU';
+    } else {
+      $('pRole').textContent = state.role;
+      $('pStamp').textContent = state.coming === 'Pakka' ? 'PAKKA' : 'SHAYAD';
+    }
+    var w = $('passwrap'); w.classList.add('show');
+    setTimeout(function(){ w.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); }, 150);
+  }
+
+  $('resetBtn').addEventListener('click', function(){
+    state = { name: '', coming: '', role: '' };
+    nameEl.value = '';
+    document.querySelectorAll('.chip').forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
+    ['rName','rComing','rRole'].forEach(function(id){ $(id).textContent = ''; });
+    $('fsRole').hidden = false;
+    $('passwrap').classList.remove('show');
+    update();
+    $('fsName').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  });
+
+  update();
+})();
+</script>
+
+</body>
+</html>
